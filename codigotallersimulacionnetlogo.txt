@@ -1,0 +1,61 @@
+;MAESTRIA EN CIENCIAS DE LA INFORMACION Y LAS COMUNICACIONES
+;UNIVERSIDAD DISTRITAL FRANCISCO JOSE DE CALDAS
+;JAIME ANDRES CUCHIA RUIZ
+;COD:20172495004
+;TALLER DE SIMULACION (NETLOGO) INFORMATICA 
+
+breed [tortuga tortugas] ;; definimos el primer tipo de agente
+breed [alien aliens] ;; definimos el segundo tipo de agente
+
+;; DEFINICIÓN DE PROPIEDADES
+tortuga-own [energia accidentes edad resistencia] ;; añadimos las propiedades de los agentes
+alien-own [siembra] ;; añadimos las propiedades de los agentes
+
+;PROCEDIMIENTOS
+to INICIO
+    ca ;; clear-all
+    set-default-shape tortuga "turtle" ;; establecemos una forma por defecto 
+    set-default-shape alien "person" ;; establecemos una forma por defecto 
+    create-tortuga  40 + random (20) ;; creamos aleatoriamente entre 40 y 60 tortugas
+    create-alien 2 ;; creamos 2 aliens
+   ask tortuga [
+    set energia 10 ;establecemos la energia inicial de las tortugas 
+    setxy random-xcor random-ycor ; posicion aleatoria tortuga coordenada x, y
+  ] 
+  
+  ask alien [
+    setxy random-xcor random-ycor; posicion aleatoria alien coordenada x, y
+  ]
+    ask patches [set pcolor green] ; determinamos el color de la parcela (verde) 
+end
+to moveragentes
+
+  ask alien[fd 1
+    if (pcolor = brown)[ ; si el color de la parcela es de color cafe la convertimos en verde(accion de siembre del agente alien)
+    set pcolor green
+  
+  set siembra siembra + 1
+      output-print siembra
+      
+    ]
+  set heading random 360]
+  ask tortuga[fd 1
+    set heading random 360
+    set energia energia - 1
+    set edad (edad + 1); cada paso es un año de vida de la tortuga
+    if (pcolor = green)[ ; si el color de la parcela es verde la toruga puede comer y obtiene 3 puntos de energia
+    set pcolor brown
+      set energia energia + 3
+    ]
+    
+  
+  if  (edad = 43)[ ; si la tortuga alcanza 43 años de vida, muere.
+    die
+    ]
+ask tortuga with [count tortuga-here > 1] ; dos tortugas no pueden estar en la misma ubicación por lo tanto, si se ubican dos o mas, las tortugas mueren por accidente
+   [
+       die 
+      set accidentes accidentes + 1
+   ]
+  ]
+end
